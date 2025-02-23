@@ -66,10 +66,22 @@ Liquid is powerful beyond our needs here. Most likely the only thing you need to
 
 ## Usage
 
-Now that you have everything setup, you just need to run:
+Now that you have everything setup, it's a good idea to do a dry run before sending.
+
+### Dry run
 
 ```bash
-ts-node index.ts
+pnpm run dry
+```
+
+This will output all mail merged emails into the console, but won't send the actual emails.
+
+### Sending emails
+
+If everything looks good after the dry run, it's time to send the emails...
+
+```bash
+pnpm run send
 ```
 
 ## License
