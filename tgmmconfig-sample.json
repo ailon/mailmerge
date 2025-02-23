@@ -1,4 +1,7 @@
 {
   "fromEmail": "John <john.random@somerandomdomain.mail>",
-  "emailField": "Email"
+  "emailField": "Email",
+  "subjectTemplate": "Your new license key, {{ ['First name'] }}!",
+  "bodyTemplateFile": "template.txt",
+  "htmlBodyTemplateFile": "template.html"
 }

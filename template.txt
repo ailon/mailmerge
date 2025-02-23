@@ -1,0 +1,8 @@
+Hi, {{ ['First name'] }}!
+
+Here's your complimentary license key for our amazing product!
+
+{{ ['New key'] }}
+
+Cheers,
+TinyGoodies Team
