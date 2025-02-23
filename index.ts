@@ -21,6 +21,16 @@ interface Email {
   bodyHtml?: string;
 }
 
+const args = process.argv.slice(2);
+
+let dryRun = false;
+if (args.length > 0 && args[0] === "--dry") {
+  dryRun = true;
+  console.log(
+    "Running in dry mode. No emails will be sent. Outputting to console instead.\n\n"
+  );
+}
+
 const config: Config = JSON.parse(fs.readFileSync("tgmmconfig.json", "utf8"));
 
 // mailer
@@ -46,9 +56,9 @@ async function send(email: Email) {
       html: email.bodyHtml, // html body
     });
 
-    console.log("Message sent: %s", info.messageId);
+    console.log(`Message to ${email.to} sent: ${info.messageId}`);
   } catch (error) {
-    console.error("Send failed: %s", error);
+    console.error(`Send to ${email.to} failed: ${error}`);
   }
 }
 
@@ -80,11 +90,23 @@ async function prepareEmail(row: any): Promise<Email> {
 // process single email
 async function processEmail(row: any) {
   const email = await prepareEmail(row);
-  await send(email);
+  if (dryRun) {
+    console.log("Email to %s", email.to);
+    console.log("Subject: %s", email.subject);
+    console.log("Body:\n\n%s\n\n", email.bodyText);
+    if (email.bodyHtml) {
+      console.log("HTML:\n\n%s\n\n", email.bodyHtml);
+    }
+    console.log("----");
+  } else {
+    await send(email);
+  }
 }
 
 // data
 parseFile("data.csv", { headers: true })
   .on("error", (error) => console.error(error))
   .on("data", (row) => processEmail(row))
-  .on("end", (rowCount: number) => console.log(`Parsed ${rowCount} rows`));
+  .on("end", (rowCount: number) =>
+    console.log(`Parsed ${rowCount} rows total.`)
+  );
